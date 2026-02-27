@@ -1,0 +1,280 @@
+<div class="guest-reservation-container">
+  <div class="card">
+    <div class="card-header">
+      <h2>Rezervă o masă</h2>
+      <p>Fără cont necesar - primești un cod de confirmare pe email</p>
+    </div>
+
+    <div class="card-body" *ngIf="!showSuccess">
+      <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+
+        <!-- Informații personale -->
+        <div class="form-section">
+          <h3>Informații personale</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">Prenume *</label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('firstName')"
+                placeholder="Ion">
+              <div class="error-message" *ngIf="isFieldInvalid('firstName')">
+                {{ getFieldError('firstName') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Nume *</label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('lastName')"
+                placeholder="Popescu">
+              <div class="error-message" *ngIf="isFieldInvalid('lastName')">
+                {{ getFieldError('lastName') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('email')"
+                placeholder="ion.popescu@email.com">
+              <div class="error-message" *ngIf="isFieldInvalid('email')">
+                {{ getFieldError('email') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phoneNumber">Telefon * (fără spații)</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                formControlName="phoneNumber"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('phoneNumber')"
+                placeholder="+40712345678"
+                pattern="[+]?[0-9]{10,15}">
+              <div class="error-message" *ngIf="isFieldInvalid('phoneNumber')">
+                {{ getFieldError('phoneNumber') }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalii rezervare -->
+        <div class="form-section">
+          <h3>Detalii rezervare</h3>
+
+          <div class="form-group">
+            <label for="restaurantId">Restaurant *</label>
+            <select
+              id="restaurantId"
+              formControlName="restaurantId"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('restaurantId')">
+              <option [value]="null" disabled>{{ loadingRestaurants ? 'Se încarcă restaurante...' : 'Selectează un restaurant' }}</option>
+              <option *ngFor="let restaurant of restaurants" [value]="restaurant.restaurantId">
+                {{ restaurant.name }} - {{ restaurant.city }}
+              </option>
+            </select>
+            <div class="error-message" *ngIf="isFieldInvalid('restaurantId')">
+              {{ getFieldError('restaurantId') }}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reservationDate">Data *</label>
+              <input
+                type="date"
+                id="reservationDate"
+                formControlName="reservationDate"
+                class="form-control"
+                [min]="getMinDate()"
+                [class.is-invalid]="isFieldInvalid('reservationDate')">
+              <div class="error-message" *ngIf="isFieldInvalid('reservationDate')">
+                {{ getFieldError('reservationDate') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reservationTime">Ora *</label>
+              <select
+                id="reservationTime"
+                formControlName="reservationTime"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('reservationTime')">
+                <option value="">Selectează ora</option>
+                <option *ngFor="let time of timeSlots" [value]="time">
+                  {{ time.substring(0, 5) }}
+                </option>
+              </select>
+              <div class="error-message" *ngIf="isFieldInvalid('reservationTime')">
+                {{ getFieldError('reservationTime') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="numberOfGuests">Număr persoane *</label>
+            <input
+              type="number"
+              id="numberOfGuests"
+              formControlName="numberOfGuests"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('numberOfGuests')"
+              min="1"
+              max="50">
+            <div class="error-message" *ngIf="isFieldInvalid('numberOfGuests')">
+              {{ getFieldError('numberOfGuests') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="specialRequests">Cerințe speciale (opțional)</label>
+            <textarea
+              id="specialRequests"
+              formControlName="specialRequests"
+              class="form-control"
+              rows="3"
+              placeholder="Ex: Alergie la nuci, masă lângă fereastră"></textarea>
+          </div>
+        </div>
+
+        <div class="error-alert" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="!loading">Trimite rezervarea</span>
+            <span *ngIf="loading">Se procesează...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="card-body" *ngIf="showPayment">
+      <div class="payment-header">
+        <h3>Finalizează plata</h3>
+        <p>Suma de plată: <strong>{{ paymentForm.value.amount }} RON</strong></p>
+        <p class="payment-info">Plata este necesară pentru a confirma rezervarea.</p>
+      </div>
+
+      <form [formGroup]="paymentForm" (ngSubmit)="onPaymentSubmit()">
+        <div class="form-section">
+          <h4>Detalii card</h4>
+
+          <div class="form-group">
+            <label for="cardHolderName">Nume deținător card *</label>
+            <input
+              type="text"
+              id="cardHolderName"
+              formControlName="cardHolderName"
+              class="form-control"
+              placeholder="Ion Popescu">
+            <div class="error-message" *ngIf="paymentForm.get('cardHolderName')?.invalid && paymentForm.get('cardHolderName')?.touched">
+              Numele este obligatoriu
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cardNumber">Număr card *</label>
+            <input
+              type="text"
+              id="cardNumber"
+              formControlName="cardNumber"
+              class="form-control"
+              placeholder="1234 5678 9012 3456"
+              maxlength="16">
+            <div class="error-message" *ngIf="paymentForm.get('cardNumber')?.invalid && paymentForm.get('cardNumber')?.touched">
+              Numărul cardului trebuie să aibă 16 cifre
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiryDate">Valabilitate (MM/YY) *</label>
+              <input
+                type="text"
+                id="expiryDate"
+                formControlName="expiryDate"
+                class="form-control"
+                placeholder="12/25"
+                maxlength="5">
+              <div class="error-message" *ngIf="paymentForm.get('expiryDate')?.invalid && paymentForm.get('expiryDate')?.touched">
+                Format invalid (MM/YY)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cvv">CVV *</label>
+              <input
+                type="text"
+                id="cvv"
+                formControlName="cvv"
+                class="form-control"
+                placeholder="123"
+                maxlength="4">
+              <div class="error-message" *ngIf="paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched">
+                CVV invalid (3-4 cifre)
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-test-info">
+            <p><strong>Test mode:</strong> Folosește 4111111111111111 pentru succes, sau orice card terminat în 0000 pentru eroare.</p>
+          </div>
+        </div>
+
+        <div class="error-alert" *ngIf="paymentError">
+          {{ paymentError }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="paymentLoading">
+            <span *ngIf="!paymentLoading">Plătește {{ paymentForm.value.amount }} RON</span>
+            <span *ngIf="paymentLoading">Se procesează...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-container" *ngIf="showSuccess">
+      <div class="success-icon">✓</div>
+      <h2>Rezervare trimisă cu succes!</h2>
+      <div class="confirmation-code">
+        <p>Codul tău de confirmare:</p>
+        <div class="code-display">{{ confirmationCode }}</div>
+        <p class="code-info">Salvează acest cod! Vei primi și un email cu detaliile.</p>
+      </div>
+      <div class="success-actions">
+        <button class="btn btn-secondary" (click)="checkStatus()">
+          Verifică status
+        </button>
+        <button class="btn btn-primary" (click)="makeAnotherReservation()">
+          Fă altă rezervare
+        </button>
+      </div>
+      <div class="info-box">
+        <p><strong>Ce urmează?</strong></p>
+        <p>Rezervarea ta este în așteptare. Vei primi un email de confirmare când restaurantul o va aproba.</p>
+      </div>
+    </div>
+  </div>
+</div>

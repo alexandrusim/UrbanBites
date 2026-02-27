@@ -1,0 +1,9 @@
+<div class="container">
+  <h2>Rezervările mele</h2>
+  <div *ngIf="isLoading">Se încarcă...</div>
+  <div *ngFor="let res of reservations" class="card">
+    <p>Data: {{ res.reservationDate }} {{ res.reservationTime }}</p>
+    <p>Status: <strong>{{ res.status }}</strong></p>
+    <p>Masa: {{ res.tableId }}</p>
+  </div>
+</div>

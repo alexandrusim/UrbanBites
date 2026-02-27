@@ -1,0 +1,58 @@
+<div class="dashboard-container">
+  <h2>Gestionare Plati</h2>
+
+  <div *ngIf="loading" class="loading">Se incarca tranzactiile...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table class="table" *ngIf="!loading && payments.length > 0" style="width: 100%; margin-top: 2rem; border-collapse: collapse;">
+    <thead>
+      <tr style="text-align: left; border-bottom: 2px solid #eee;">
+        <th style="padding: 1rem;">ID</th>
+        <th style="padding: 1rem;">Rezervare</th>
+        <th style="padding: 1rem;">Suma (RON)</th>
+        <th style="padding: 1rem;">Metoda</th>
+        <th style="padding: 1rem;">Status</th>
+        <th style="padding: 1rem;">Data</th>
+        <th style="padding: 1rem;">Actiuni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of payments" style="border-bottom: 1px solid #eee;">
+        <td style="padding: 1rem;">{{ p.paymentId }}</td>
+        <td style="padding: 1rem;">#{{ p.reservationId }}</td>
+        <td style="padding: 1rem;">{{ p.amount }}</td>
+        <td style="padding: 1rem;">{{ p.paymentMethod }}</td>
+        <td style="padding: 1rem;">
+          <span [class]="'badge ' + getStatusClass(p.status)" style="padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.8rem;">
+            {{ p.status }}
+          </span>
+        </td>
+        <td style="padding: 1rem;">{{ p.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+        <td style="padding: 1rem;">
+          <button *ngIf="p.status === 'PENDING'" 
+                  (click)="onProcessPayment(p.paymentId!)" 
+                  style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+            Proceseaza
+          </button>
+          
+          <select (change)="onUpdateStatus(p.paymentId!, $any($event.target).value)" 
+                  style="padding: 5px; border-radius: 4px; margin-left: 5px;">
+            <option value="">Schimba Status</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="FAILED">FAILED</option>
+            <option value="REFUNDED">REFUNDED</option>
+          </select>
+
+          <button (click)="onDeletePayment(p.paymentId!)" 
+                  style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">
+            Sterge
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && payments.length === 0" class="loading">
+    Nu exista nicio plata inregistrata in sistem.
+  </div>
+</div>

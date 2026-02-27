@@ -1,0 +1,121 @@
+<div class="table-management">
+  <div class="header">
+    <h1>Gestionare Mese</h1>
+    <button class="btn-primary" (click)="openCreateModal()">
+      + Adaugă Masă
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading">Se încarcă...</div>
+  } @else {
+    <div class="tables-grid">
+      @for (table of tables; track table.tableId) {
+        <div class="table-card" [class.unavailable]="!table.isAvailable">
+          <div class="table-header">
+            <div class="table-number">Masa {{ table.tableNumber }}</div>
+            <span class="status-badge" [class.available]="table.isAvailable">
+              {{ table.isAvailable ? 'Disponibilă' : 'Indisponibilă' }}
+            </span>
+          </div>
+          
+          <div class="table-info">
+            <div class="info-item">
+              <span class="icon" aria-hidden="true"></span>
+              <span>{{ table.capacity }} persoane</span>
+            </div>
+            @if (table.location) {
+              <div class="info-item">
+                <span class="icon" aria-hidden="true"></span>
+                <span>{{ table.location }}</span>
+              </div>
+            }
+            @if (table.shape) {
+              <div class="info-item">
+                <span class="icon" aria-hidden="true"></span>
+                <span>{{ table.shape }}</span>
+              </div>
+            }
+            @if (table.notes) {
+              <div class="info-item">
+                <span class="icon" aria-hidden="true"></span>
+                <span>{{ table.notes }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="table-actions">
+            <button class="btn-edit" (click)="openEditModal(table)">
+              Editează
+            </button>
+            <button class="btn-toggle" (click)="toggleAvailability(table)">
+              {{ table.isAvailable ? 'Dezactivează' : 'Activează' }}
+            </button>
+            <button class="btn-delete" (click)="deleteTable(table.tableId!)">
+              Șterge
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (showModal) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditMode ? 'Editare Masă' : 'Masă Nouă' }}</h2>
+          <button class="btn-close" (click)="closeModal()">×</button>
+        </div>
+
+        <form class="modal-body" (ngSubmit)="saveTable()">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Număr Masă *</label>
+              <input type="text" [(ngModel)]="currentTable.tableNumber" name="tableNumber" required>
+            </div>
+            <div class="form-group">
+              <label>Capacitate *</label>
+              <input type="number" [(ngModel)]="currentTable.capacity" name="capacity" min="1" max="20" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Locație</label>
+            <input type="text" [(ngModel)]="currentTable.location" name="location" placeholder="Ex: Fereastră, Terasă, Centru">
+          </div>
+
+          <div class="form-group">
+            <label>Formă</label>
+            <select [(ngModel)]="currentTable.shape" name="shape">
+              <option value="">Selectează</option>
+              <option value="round">Rotundă</option>
+              <option value="square">Pătrată</option>
+              <option value="rectangle">Dreptunghiulară</option>
+              <option value="oval">Ovală</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Notițe</label>
+            <textarea [(ngModel)]="currentTable.notes" name="notes" rows="3" placeholder="Detalii suplimentare..."></textarea>
+          </div>
+
+          <div class="form-group-checkbox">
+            <input type="checkbox" [(ngModel)]="currentTable.isAvailable" name="isAvailable" id="isAvailable">
+            <label for="isAvailable">Masă disponibilă</label>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" (click)="closeModal()">
+              Anulează
+            </button>
+            <button type="submit" class="btn-primary">
+              {{ isEditMode ? 'Actualizează' : 'Creează' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

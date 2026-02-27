@@ -1,0 +1,165 @@
+<div class="restaurant-management">
+  <div class="header">
+    <h1>Gestionare Restaurante</h1>
+    <button class="btn-primary" (click)="openCreateModal()">
+      + Adaugă Restaurant
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading">Se încarcă...</div>
+  } @else {
+    <div class="restaurants-grid">
+      @for (restaurant of restaurants; track restaurant.restaurantId) {
+        <div class="restaurant-card" [class.inactive]="!restaurant.isActive">
+          <div class="restaurant-header">
+            <h3>{{ restaurant.name }}</h3>
+            <span class="status-badge" [class.active]="restaurant.isActive">
+              {{ restaurant.isActive ? 'Activ' : 'Inactiv' }}
+            </span>
+          </div>
+          
+          <div class="restaurant-info">
+            <p><strong>Oraș:</strong> {{ restaurant.city }}</p>
+            <p><strong>Adresă:</strong> {{ restaurant.address }}</p>
+            <p><strong>Telefon:</strong> {{ restaurant.phoneNumber }}</p>
+            @if (restaurant.email) {
+              <p><strong>Email:</strong> {{ restaurant.email }}</p>
+            }
+            @if (restaurant.cuisineType) {
+              <p><strong>Tip bucătărie:</strong> {{ restaurant.cuisineType }}</p>
+            }
+            @if (restaurant.capacity) {
+              <p><strong>Capacitate:</strong> {{ restaurant.capacity }} persoane</p>
+            }
+          </div>
+
+          <div class="restaurant-actions">
+            <button [routerLink]="['/admin/menu', restaurant.restaurantId]" class="btn-menu">
+             Meniu
+            </button> 
+            
+            <button class="btn-edit" (click)="openEditModal(restaurant)">
+              Editează
+            </button>
+            
+            <button class="btn-toggle" (click)="toggleActive(restaurant)">
+              {{ restaurant.isActive ? 'Dezactivează' : 'Activează' }}
+            </button>
+            
+            <button class="btn-delete" (click)="deleteRestaurant(restaurant.restaurantId!)">
+              Șterge
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (showModal) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ isEditMode ? 'Editare Restaurant' : 'Restaurant Nou' }}</h2>
+          <button class="btn-close" (click)="closeModal()">×</button>
+        </div>
+
+        <form class="modal-body" (ngSubmit)="saveRestaurant()">
+          <div class="form-group">
+            <label>Nume Restaurant *</label>
+            <input type="text" [(ngModel)]="currentRestaurant.name" name="name" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Oraș *</label>
+              <input type="text" [(ngModel)]="currentRestaurant.city" name="city" required>
+            </div>
+            <div class="form-group">
+              <label>Cod Poștal</label>
+              <input type="text" [(ngModel)]="currentRestaurant.postalCode" name="postalCode">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Adresă *</label>
+            <input type="text" [(ngModel)]="currentRestaurant.address" name="address" required>
+          </div>
+
+          <div class="form-group">
+            <label>Țară</label>
+            <input type="text" [(ngModel)]="currentRestaurant.country" name="country" placeholder="România">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Telefon *</label>
+              <input type="tel" [(ngModel)]="currentRestaurant.phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" [(ngModel)]="currentRestaurant.email" name="email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Website</label>
+            <input type="url" [(ngModel)]="currentRestaurant.website" name="website">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Logo URL</label>
+              <input type="url" [(ngModel)]="currentRestaurant.logoUrl" name="logoUrl" placeholder="https://...">
+            </div>
+            <div class="form-group">
+              <label>Cover Image URL</label>
+              <input type="url" [(ngModel)]="currentRestaurant.coverImageUrl" name="coverImageUrl" placeholder="https://...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Descriere</label>
+            <textarea [(ngModel)]="currentRestaurant.description" name="description" rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tip Bucătărie</label>
+              <input type="text" [(ngModel)]="currentRestaurant.cuisineType" name="cuisineType">
+            </div>
+            <div class="form-group">
+              <label>Capacitate</label>
+              <input type="number" [(ngModel)]="currentRestaurant.capacity" name="capacity" min="1">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Preț</label>
+            <select [(ngModel)]="currentRestaurant.priceRange" name="priceRange">
+              <option value="">Selectează</option>
+              <option value="$">$ - Ieftin</option>
+              <option value="$$">$$ - Moderat</option>
+              <option value="$$$">$$$ - Scump</option>
+              <option value="$$$$">$$$$ - Foarte Scump</option>
+            </select>
+          </div>
+
+          <div class="form-group-checkbox">
+            <input type="checkbox" [(ngModel)]="currentRestaurant.isActive" name="isActive" id="isActive">
+            <label for="isActive">Restaurant activ</label>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" (click)="closeModal()">
+              Anulează
+            </button>
+            <button type="submit" class="btn-primary">
+              {{ isEditMode ? 'Actualizează' : 'Creează' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

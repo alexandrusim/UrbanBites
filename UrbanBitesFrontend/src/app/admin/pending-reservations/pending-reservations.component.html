@@ -1,0 +1,150 @@
+<div class="pending-container">
+  <div class="page-header">
+    <h1>Rezervări în așteptare</h1>
+    <button class="btn btn-refresh" (click)="loadPendingReservations()" [disabled]="loading">
+      ↻ Reîmprospătează
+    </button>
+  </div>
+
+  <div class="error-alert" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    Se încarcă...
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && pendingReservations.length === 0 && !errorMessage">
+    <div class="empty-icon" aria-hidden="true"></div>
+    <h3>Nu există rezervări în așteptare</h3>
+    <p>Toate rezervările au fost procesate.</p>
+  </div>
+
+  <div class="reservations-grid" *ngIf="!loading && pendingReservations.length > 0">
+    <div class="reservation-card" *ngFor="let reservation of pendingReservations">
+      <div class="card-header-info">
+        <div class="guest-name">{{ reservation.fullName }}</div>
+        <div class="confirmation-code">{{ reservation.confirmationCode }}</div>
+      </div>
+
+      <div class="card-details">
+        <div class="detail-row">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Data:</span>
+          <span class="value">{{ formatDate(reservation.reservationDate) }} la {{ formatTime(reservation.reservationTime) }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Persoane:</span>
+          <span class="value">{{ reservation.numberOfGuests }}</span>
+        </div>
+
+        <div class="detail-row" *ngIf="reservation.tableNumber">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Masă:</span>
+          <span class="value">{{ reservation.tableNumber }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Email:</span>
+          <span class="value">{{ reservation.email }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Telefon:</span>
+          <span class="value">{{ reservation.phoneNumber }}</span>
+        </div>
+
+        <div class="detail-row full-width" *ngIf="reservation.specialRequests">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Cerințe:</span>
+          <span class="value">{{ reservation.specialRequests }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Creată:</span>
+          <span class="value">{{ formatDateTime(reservation.createdAt) }}</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-approve" (click)="openApproveModal(reservation)">
+          Confirmă
+        </button>
+        <button class="btn btn-reject" (click)="openRejectModal(reservation)">
+          Respinge
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Approve Modal -->
+<div class="modal-overlay" *ngIf="showApproveModal" (click)="closeModals()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Confirmă rezervarea</h3>
+      <button class="close-btn" (click)="closeModals()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="reservation-summary">
+        <p><strong>Client:</strong> {{ selectedReservation?.fullName }}</p>
+        <p><strong>Data:</strong> {{ formatDate(selectedReservation?.reservationDate) }} la {{ formatTime(selectedReservation?.reservationTime) }}</p>
+        <p><strong>Persoane:</strong> {{ selectedReservation?.numberOfGuests }}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="adminNote">Notă admin (opțional)</label>
+        <textarea
+          id="adminNote"
+          [(ngModel)]="adminNote"
+          class="form-control"
+          rows="3"
+          placeholder="Ex: Masă pregătită lângă fereastră"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModals()">Anulează</button>
+      <button class="btn btn-approve" (click)="confirmApproval()">Confirmă rezervarea</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal-overlay" *ngIf="showRejectModal" (click)="closeModals()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Respinge rezervarea</h3>
+      <button class="close-btn" (click)="closeModals()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="reservation-summary">
+        <p><strong>Client:</strong> {{ selectedReservation?.fullName }}</p>
+        <p><strong>Data:</strong> {{ formatDate(selectedReservation?.reservationDate) }} la {{ formatTime(selectedReservation?.reservationTime) }}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="rejectionReason">Motiv refuz *</label>
+        <textarea
+          id="rejectionReason"
+          [(ngModel)]="rejectionReason"
+          class="form-control"
+          rows="3"
+          placeholder="Ex: Restaurant complet pentru această dată"
+          required></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModals()">Anulează</button>
+      <button class="btn btn-reject" (click)="confirmRejection()">Respinge rezervarea</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="reservation-management-container">
+  <div class="header-section">
+    <h1>Gestionare Rezervări</h1>
+    <p class="subtitle">Administrează fluxul de clienți și confirmă rezervările noi.</p>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter" [(ngModel)]="selectedStatus" class="form-control">
+          <option value="">Toate statusurile</option>
+          <option value="PENDING">În așteptare (Noi)</option>
+          <option value="CONFIRMED">Confirmate</option>
+          <option value="CANCELLED">Anulate</option>
+          <option value="COMPLETED">Finalizate</option>
+          <option value="CANCELLED">Respinse</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="dateFilter">Data</label>
+        <input type="date" id="dateFilter" [(ngModel)]="selectedDate" class="form-control">
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn-primary" (click)="applyFilters()">
+          <i class="icon-search"></i> Aplică Filtre
+        </button>
+        <button class="btn-secondary" (click)="clearFilters()">Resetează</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Se preiau datele de pe server...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="table-responsive">
+    <table class="reservations-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Client / Contact</th>
+          <th>Restaurant</th>
+          <th>Dată & Oră</th>
+          <th>Nr. Pers</th>
+          <th>Status</th>
+          <th>Observații</th>
+          <th>Acțiuni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let res of filteredReservations">
+          <td>#{{ res.reservationId }}</td>
+          <td>
+            <div class="client-info">
+              <strong>{{ getDisplayName(res) }}</strong>
+              <small *ngIf="res.email" class="muted-email">{{ res.email }}</small>
+            </div>
+          </td>
+          <td>{{ res.restaurantName }}</td>
+          <td>
+            <div class="date-time">
+              <span>{{ res.reservationDate }} {{ res.reservationTime }}</span>
+            </div>
+          </td>
+          <td class="text-center">{{ res.numberOfGuests }}</td>
+          <td>
+            <span [class]="'badge ' + getStatusBadgeClass(res.status)">
+              {{ getStatusLabel(res.status) }}
+            </span>
+          </td>
+          <td class="special-requests">
+            <span [title]="res.specialRequests" *ngIf="res.specialRequests">
+              {{ (res.specialRequests.length > 30) ? (res.specialRequests | slice:0:30) + '...' : res.specialRequests }}
+            </span>
+            <span class="text-muted" *ngIf="!res.specialRequests">-</span>
+          </td>
+          <td class="actions-cell">
+            <ng-container *ngIf="res.status === 'PENDING'">
+              <button class="btn-icon btn-approve" (click)="openStatusModal(res, 'CONFIRMED')" title="Aprobă">
+                Aprobă
+              </button>
+              <button class="btn-icon btn-reject" (click)="openStatusModal(res, 'CANCELLED')" title="Respinge">
+                Respinge
+              </button>
+            </ng-container>
+
+            <button *ngIf="res.status === 'CONFIRMED'" 
+                    class="btn-icon btn-complete" 
+                    (click)="openStatusModal(res, 'COMPLETED')" 
+                    title="Marchează ca Finalizată">
+              Finalizează
+            </button>
+
+            <button class="btn-icon btn-delete" (click)="deleteReservation(res.reservationId)" title="Șterge definitiv">
+              Șterge
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="filteredReservations.length === 0" class="no-data-card">
+      <p>Nu s-au găsit rezervări care să corespundă criteriilor selectate.</p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showReasonModal" class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ newStatus === 'CONFIRMED' ? 'Aprobare Rezervare' : 'Actualizare Status' }}</h2>
+      <button class="close-x" (click)="closeModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <p>Sunteți pe cale să schimbați statusul rezervării <strong>#{{ currentReservation?.reservationId }}</strong> în 
+         <span [class]="'badge ' + getStatusBadgeClass(newStatus)">{{ getStatusLabel(newStatus) }}</span>.
+      </p>
+      
+      <div class="form-group mt-3" *ngIf="newStatus === 'CONFIRMED'">
+        <label for="tableSelect">Confirmă sau schimbă masa:</label>
+        <select id="tableSelect" [(ngModel)]="currentReservation!.tableId" class="form-control">
+          <option [value]="currentReservation!.tableId">
+            Masa curentă (#{{ currentReservation!.tableId }})
+          </option>
+          </select>
+        <small class="text-muted">Masa a fost selectată de client, dar o puteți modifica acum.</small>
+      </div>
+
+      <div class="form-group mt-3">
+        <label for="statusReason">Observații pentru client (opțional):</label>
+        <textarea 
+          id="statusReason" 
+          [(ngModel)]="statusReason" 
+          class="form-control"
+          rows="3"
+          placeholder="Ex: Vă așteptăm cu drag! / Din păcate restaurantul este plin la acea oră."></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Anulează</button>
+      <button [class]="newStatus === 'CANCELLED' ? 'btn-danger' : 'btn-primary'" 
+              (click)="confirmStatusUpdate()">
+        {{ newStatus === 'CANCELLED' ? 'Respinge Rezervarea' : 'Confirmă Status' }}
+      </button>
+    </div>
+  </div>
+</div>

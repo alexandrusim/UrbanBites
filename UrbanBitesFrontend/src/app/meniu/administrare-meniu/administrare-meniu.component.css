@@ -1,0 +1,44 @@
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #343a40;
+}
+
+.form-control {
+    border-radius: 4px;
+}
+
+.invalid-feedback {
+    font-size: 0.85rem;
+}
+
+.border.rounded {
+    border: 1px solid #dee2e6 !important;
+    background-color: #f8f9fa;
+}
+
+.input-group button.btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.input-group button.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background-color: #1e7e34;
+    border-color: #1c7430;
+}

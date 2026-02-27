@@ -1,0 +1,36 @@
+<div class="restaurant-details-container" *ngIf="restaurant">
+  <div class="header">
+    <button (click)="goBack()" class="btn-back">← Înapoi</button>
+    <h1>{{ restaurant.nume }}</h1>
+  </div>
+
+  <div class="tabs-header">
+    <button [class.active]="activeTab === 'info'" (click)="setActiveTab('info')">Informații</button>
+    <button [class.active]="activeTab === 'menu'" (click)="setActiveTab('menu')">Meniu</button>
+  </div>
+
+  <div class="tab-content">
+    <div *ngIf="activeTab === 'info'" class="info-section">
+      <p>Bine ați venit la {{ restaurant.nume }}! Aici găsiți cele mai bune preparate.</p>
+      <button class="btn-reserve-lg" (click)="makeReservation()">Rezervă o masă acum</button>
+    </div>
+
+    <div *ngIf="activeTab === 'menu'" class="menu-section">
+      <div *ngIf="menuItems.length === 0" class="no-content">
+        <p>Meniul va fi disponibil în curând pentru acest restaurant.</p>
+      </div>
+      
+      <div class="menu-grid" *ngIf="menuItems.length > 0">
+        <div *ngFor="let item of menuItems" class="menu-item-card">
+          <div class="menu-item-info">
+            <h4>{{ item.nume || item.name }}</h4> 
+            <p class="menu-item-description">{{ item.descriere || item.description }}</p>
+          </div>
+          <div class="menu-item-price">
+            {{ item.pret || item.price }} RON
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

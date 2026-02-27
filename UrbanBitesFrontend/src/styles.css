@@ -1,0 +1,89 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100%; 
+}
+
+body.is-extension {
+    width: 800px;
+    height: 600px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    zoom: 0.8;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.extension-wrapper {
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: white;
+}
+
+.container {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.navbar-custom {
+    background-color: #3f51b5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-custom .nav-link {
+    color: #ffffff;
+}
+
+.card {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-header.bg-primary {
+    background-color: #3f51b5 !important;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.table {
+    margin-top: 15px;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #3f51b5;
+    color: white;
+    border-color: #3f51b5;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    color: #fff;
+    background-color: #6c757d;
+}
+
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 600;
+}

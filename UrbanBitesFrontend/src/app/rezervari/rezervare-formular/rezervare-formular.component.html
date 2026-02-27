@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>{{ esteEditare ? 'Modifică Rezervarea' : 'Rezervă o Masă' }}</h2>
+
+  <form [formGroup]="rezervareForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label>ID Masă:</label>
+      <input type="number" formControlName="masa_id">
+    </div>
+
+    <div>
+      <label>Data și Ora:</label>
+      <input type="datetime-local" formControlName="interval_orar">
+    </div>
+
+    <div>
+      <label>Număr Persoane (Max 10):</label>
+      <input type="number" formControlName="numar_persoane">
+    </div>
+
+    <button type="submit" [disabled]="rezervareForm.invalid">
+      {{ esteEditare ? 'Actualizează' : 'Finalizează Rezervarea' }}
+    </button>
+  </form>
+</div>

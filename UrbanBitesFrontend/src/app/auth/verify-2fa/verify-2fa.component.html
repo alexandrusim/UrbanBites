@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="verify-card">
+    <div class="header">
+      <h1>Two-Factor Authentication</h1>
+      <p class="email">{{ email }}</p>
+    </div>
+
+    <div *ngIf="success" class="success-state">
+      <h2>Verified!</h2>
+      <p>You're successfully logged in</p>
+      <p class="redirect">Redirecting to dashboard...</p>
+    </div>
+
+    <div *ngIf="!success" class="verify-form">
+      <div class="instructions">
+        <p>
+          Open <strong>Google Authenticator</strong> on your phone<br>
+          and enter the <strong>6-digit code</strong>
+        </p>
+      </div>
+
+      <div class="input-section">
+        <input
+          type="text"
+          class="code-input"
+          [(ngModel)]="verificationCode"
+          (keypress)="onKeypress($event)"
+          maxlength="6"
+          inputmode="numeric"
+          placeholder="000000"
+          [disabled]="verifying"
+          autofocus>
+        <div class="input-visual">
+          <span *ngFor="let i of [0, 1, 2, 3, 4, 5]" 
+                class="digit"
+                [class.filled]="verificationCode.length > i">
+            {{ verificationCode[i] || '' }}
+          </span>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <span class="error-icon">⚠️</span>
+        <span>{{ error }}</span>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-verify"
+        (click)="verifyCode()"
+        [disabled]="verifying || verificationCode.length !== 6">
+        <span *ngIf="!verifying">Verify Code</span>
+        <span *ngIf="verifying">
+          <span class="spinner-small"></span> Verifying...
+        </span>
+      </button>
+
+      <div class="help-section">
+        <p class="help-text">Lost access to your authenticator?</p>
+        <a href="#" class="help-link">Use backup code instead</a>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-back"
+        (click)="backToLogin()"
+        [disabled]="verifying">
+        ← Back to Login
+      </button>
+    </div>
+
+    <div class="tips">
+      <p><strong>Tip:</strong> Codes expire in 30 seconds</p>
+      <p><strong>Time sync:</strong> Keep your phone's time synchronized</p>
+    </div>
+  </div>
+</div>

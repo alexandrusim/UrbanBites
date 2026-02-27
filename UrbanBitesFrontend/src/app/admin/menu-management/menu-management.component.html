@@ -1,0 +1,139 @@
+<div class="menu-container">
+  <header class="page-header">
+    <div class="header-content">
+      <h1>Management Meniu</h1>
+      <p>Gestionează preparatele restaurantului</p>
+    </div>
+    <button class="btn-add" (click)="openAddForm()">
+      <span>+</span> Adaugă Produs
+    </button>
+  </header>
+
+  <div class="filter-bar">
+    <button 
+      class="filter-btn" 
+      [class.active]="selectedCategory === ''"
+      (click)="selectedCategory = ''; filterByCategory()">
+      Toate
+    </button>
+    
+    <button *ngFor="let category of categories"
+      class="filter-btn"
+      [class.active]="selectedCategory === category"
+      (click)="selectedCategory = category; filterByCategory()">
+      {{ category.name || category }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Se încarcă meniul...</p>
+  </div>
+
+  <div class="menu-grid" *ngIf="!loading">
+    <div *ngFor="let item of filteredItems" 
+         class="menu-card" 
+         [class.unavailable]="!item.available">
+      
+      <div class="card-image-wrapper">
+        <img [src]="item.imageUrl || 'assets/images/default-food.png'" [alt]="item.name">
+        <span class="price-badge">{{ item.price }} RON</span>
+      </div>
+      
+      <div class="card-content">
+        <div class="card-header-row">
+          <h3>{{ item.name }}</h3>
+          <span class="category-tag">{{ item.category }}</span>
+        </div>
+
+        <p class="description">{{ item.description }}</p>
+
+        <div class="meta-row">
+          <span *ngIf="item.preparationTime" class="meta-item">⏱️ {{ item.preparationTime }} min</span>
+          <span *ngIf="item.allergens" class="meta-item warning">⚠️ {{ item.allergens }}</span>
+        </div>
+
+        <div class="card-footer">
+          <div class="availability-toggle" (click)="toggleAvailability(item)" title="Schimbă disponibilitatea">
+            <div class="toggle-switch" [class.active]="item.available">
+              <div class="toggle-knob"></div>
+            </div>
+            <span class="status-text">{{ item.available ? 'Disponibil' : 'Indisponibil' }}</span>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="action-btn edit" (click)="openEditForm(item)" title="Editează">
+              Editează
+            </button>
+            
+            <button class="action-btn delete" (click)="deleteItem(item)" title="Șterge">
+              Șterge
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && filteredItems.length === 0" class="empty-state">
+    <p>Nu există produse în această categorie.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showForm">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ isEditing ? 'Editează Preparat' : 'Adaugă Preparat' }}</h2>
+      <button class="close-btn" (click)="closeForm()">×</button>
+    </div>
+    
+    <form [formGroup]="menuForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Nume Preparat</label>
+        <input type="text" formControlName="name" placeholder="Ex: Burger Clasic">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preț (RON)</label>
+          <input type="number" formControlName="price">
+        </div>
+        <div class="form-group">
+          <label>Categorie</label>
+          <select formControlName="category">
+            <option value="">Alege categoria</option>
+            <option *ngFor="let cat of categories" [value]="cat.name || cat">
+              {{ cat.name || cat }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Descriere</label>
+        <textarea formControlName="description" rows="3"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Timp (min)</label>
+          <input type="number" formControlName="preparationTime">
+        </div>
+        <div class="form-group">
+          <label>Alergeni</label>
+          <input type="text" formControlName="allergens">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>URL Imagine</label>
+        <input type="text" formControlName="imageUrl" placeholder="https://...">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="closeForm()">Anulează</button>
+        <button type="submit" class="btn-save" [disabled]="menuForm.invalid">Salvare</button>
+      </div>
+    </form>
+  </div>
+</div>

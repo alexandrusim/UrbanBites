@@ -1,0 +1,126 @@
+.notifications-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap; 
+  gap: 10px;
+}
+
+.actions-group {
+  display: flex;
+  gap: 10px;
+}
+h2 { margin: 0; color: #333; }
+
+.btn-read-all {
+  background: transparent;
+  border: 1px solid #c7a17a;
+  color: #c7a17a;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-read-all:hover {
+  background: #c7a17a;
+  color: white;
+}
+.btn-delete-all {
+  background: transparent;
+  border: 1px solid #dc3545; 
+  color: #dc3545;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-delete-all:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.notification-list { list-style: none; padding: 0; margin: 0; }
+
+.notification-list li {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-list li.unread {
+  background-color: #fdf8f3;
+  border-left: 4px solid #c7a17a;
+}
+
+.notif-date { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+
+.btn-delete {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.btn-delete:hover { color: #dc3545; }
+
+.action-buttons {
+  display: flex;
+  gap: 12px; 
+  align-items: center;
+}
+
+.btn-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px; 
+  padding: 8px 16px;
+  border-radius: 50px; 
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-pill:active {
+  transform: scale(0.95);
+}
+
+.btn-blue {
+  background-color: #eff6ff;
+  color: #2563eb; 
+}
+
+.btn-blue:hover {
+  background-color: #dbeafe; 
+  color: #1d4ed8;
+}
+
+.btn-red {
+  background-color: #fef2f2; 
+  color: #dc2626;            
+}
+
+.btn-red:hover {
+  background-color: #fee2e2; 
+  color: #b91c1c;
+}
+
+.btn-pill svg {
+  stroke-width: 2.5;
+}

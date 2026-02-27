@@ -1,0 +1,73 @@
+<div class="feedback-container">
+  <div class="feedback-card" *ngIf="!success">
+    <h1>Lasă o recenzie</h1>
+    
+    <div class="reservation-info" *ngIf="reservation">
+      <p>Recenzie pentru vizita la <strong>{{ reservation.restaurantName }}</strong></p>
+    </div>
+
+    <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group" *ngIf="!reservation">
+        <label>Alege Restaurantul *</label>
+        <select formControlName="restaurantId" class="form-control">
+          <option [value]="null" disabled>-- Selectează un restaurant --</option>
+          <option *ngFor="let res of restaurants" [value]="res.restaurantId">
+            {{ res.name }}
+          </option>
+        </select>
+        <small class="error-text" *ngIf="feedbackForm.get('restaurantId')?.touched && feedbackForm.get('restaurantId')?.invalid">
+          Acest câmp este obligatoriu.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Rating General *</label>
+        <div class="star-rating">
+          <span *ngFor="let star of stars" class="star"
+            [class.filled]="star <= feedbackForm.get('rating')?.value"
+            (click)="setRating('rating', star)">
+            {{ star <= feedbackForm.get('rating')?.value ? '★' : '☆' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="rating-grid">
+        <div class="form-group">
+          <label>Mâncare</label>
+          <div class="star-rating mini">
+            <span *ngFor="let star of stars" class="star"
+              [class.filled]="star <= feedbackForm.get('foodRating')?.value"
+              (click)="setRating('foodRating', star)">★</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Serviciu</label>
+          <div class="star-rating mini">
+            <span *ngFor="let star of stars" class="star"
+              [class.filled]="star <= feedbackForm.get('serviceRating')?.value"
+              (click)="setRating('serviceRating', star)">★</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Comentariu</label>
+        <textarea formControlName="comment" class="form-control" rows="4" placeholder="Scrie ceva despre experiența ta..."></textarea>
+      </div>
+
+      <div class="error-alert" *ngIf="error">{{ error }}</div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">Anulează</button>
+        <button type="submit" class="btn-submit" [disabled]="loading || feedbackForm.invalid">
+          {{ loading ? 'Se trimite...' : 'Trimite' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="success-card" *ngIf="success">
+    <h2>Mulțumim! Recenzia ta a fost trimisă.</h2>
+  </div>
+</div>

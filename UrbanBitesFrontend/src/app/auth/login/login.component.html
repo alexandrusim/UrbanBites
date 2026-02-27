@@ -1,0 +1,48 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>Autentificare</h2>
+    <p class="subtitle">Bun venit înapoi!</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email"
+          [class.error]="email?.invalid && email?.touched"
+          placeholder="exemplu@email.com">
+        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+          <span *ngIf="email?.errors?.['required']">Email-ul este obligatoriu</span>
+          <span *ngIf="email?.errors?.['email']">Email invalid</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Parolă</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password"
+          [class.error]="password?.invalid && password?.touched"
+          placeholder="Introdu parola">
+        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">Parola este obligatorie</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="error">
+        {{ error }}
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loading">
+        <span *ngIf="!loading">Autentificare</span>
+        <span *ngIf="loading">Se încarcă...</span>
+      </button>
+    </form>
+
+    <div class="register-link">
+      Nu ai cont? <a routerLink="/register">Înregistrează-te</a>
+    </div>
+  </div>
+</div>

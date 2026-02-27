@@ -1,0 +1,132 @@
+<div class="status-check-container">
+  <div class="card">
+    <div class="card-header">
+      <h2>Verifică statusul rezervării</h2>
+      <p>Introdu codul de confirmare primit pe email</p>
+    </div>
+
+    <div class="card-body">
+      <!-- Search Form -->
+      <form [formGroup]="checkForm" (ngSubmit)="checkStatus()" *ngIf="!reservation">
+        <div class="form-group">
+          <label for="confirmationCode">Cod confirmare</label>
+          <input
+            type="text"
+            id="confirmationCode"
+            formControlName="confirmationCode"
+            class="form-control code-input"
+            placeholder="ex: A7B9K2M4"
+            maxlength="8"
+            (input)="$any($event.target).value = $any($event.target).value.toUpperCase()">
+          <div class="error-message" *ngIf="checkForm.get('confirmationCode')?.invalid && checkForm.get('confirmationCode')?.touched">
+            Codul trebuie să aibă 8 caractere
+          </div>
+        </div>
+
+        <div class="error-alert" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="!loading">Verifică</span>
+            <span *ngIf="loading">Se caută...</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Reservation Details -->
+      <div class="reservation-details" *ngIf="reservation">
+        <div class="status-badge" [ngClass]="getStatusClass(reservation.status)">
+          <div class="status-icon">{{ getStatusIcon(reservation.status) }}</div>
+          <div class="status-text">{{ getStatusText(reservation.status) }}</div>
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <div class="detail-label">Restaurant</div>
+            <div class="detail-value">{{ reservation.restaurantName }}</div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-label">Data</div>
+            <div class="detail-value">{{ formatDate(reservation.reservationDate) }}</div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-label">Ora</div>
+            <div class="detail-value">{{ formatTime(reservation.reservationTime) }}</div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-label">Număr persoane</div>
+            <div class="detail-value">{{ reservation.numberOfGuests }}</div>
+          </div>
+
+          <div class="detail-item" *ngIf="reservation.tableNumber">
+            <div class="detail-label">Masă</div>
+            <div class="detail-value">{{ reservation.tableNumber }}</div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-label">Cod confirmare</div>
+            <div class="detail-value code-display">{{ reservation.confirmationCode }}</div>
+          </div>
+
+          <div class="detail-item full-width" *ngIf="reservation.fullName">
+            <div class="detail-label">Nume</div>
+            <div class="detail-value">{{ reservation.fullName }}</div>
+          </div>
+
+          <div class="detail-item full-width" *ngIf="reservation.email">
+            <div class="detail-label">Email</div>
+            <div class="detail-value">{{ reservation.email }}</div>
+          </div>
+
+          <div class="detail-item full-width" *ngIf="reservation.phoneNumber">
+            <div class="detail-label">Telefon</div>
+            <div class="detail-value">{{ reservation.phoneNumber }}</div>
+          </div>
+
+          <div class="detail-item full-width" *ngIf="reservation.specialRequests">
+            <div class="detail-label">Cerințe speciale</div>
+            <div class="detail-value">{{ reservation.specialRequests }}</div>
+          </div>
+
+          <div class="detail-item full-width" *ngIf="reservation.cancellationReason">
+            <div class="detail-label">Motiv anulare</div>
+            <div class="detail-value cancellation-reason">{{ reservation.cancellationReason }}</div>
+          </div>
+        </div>
+
+        <!-- Status Information -->
+        <div class="status-info" *ngIf="reservation.status === 'PENDING'">
+          <div class="info-icon">ℹ</div>
+          <div class="info-text">
+            Rezervarea ta este în așteptare. Vei primi un email când restaurantul o va aproba.
+          </div>
+        </div>
+
+        <div class="status-info success" *ngIf="reservation.status === 'CONFIRMED'">
+          <div class="info-icon">✓</div>
+          <div class="info-text">
+            Rezervarea ta a fost confirmată! Te așteptăm la restaurant.
+          </div>
+        </div>
+
+        <div class="status-info error" *ngIf="reservation.status === 'CANCELLED'">
+          <div class="info-icon">✕</div>
+          <div class="info-text">
+            Această rezervare a fost anulată.
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-secondary" (click)="reset()">
+            Verifică altă rezervare
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

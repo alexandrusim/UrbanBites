@@ -1,0 +1,252 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="header-content">
+      <h1>Contul Meu</h1>
+      <p>Gestionează-ți setările de profil și securitate</p>
+    </div>
+    <button class="btn btn-logout" (click)="logout()">
+      Logout
+    </button>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-sidebar">
+      <div class="user-card">
+        <div class="avatar"></div>
+        <h2>{{ user?.firstName }} {{ user?.lastName }}</h2>
+        <p class="email">{{ user?.email }}</p>
+        <div class="role-badge" [class.admin]="user?.role === 'ADMIN_RESTAURANT' || user?.role === 'SYSTEM_ADMIN'">
+          {{ (user?.role === 'ADMIN_RESTAURANT' || user?.role === 'SYSTEM_ADMIN') ? 'Administrator' : 'User' }}
+        </div>
+      </div>
+
+      <div class="sidebar-menu">
+        <button class="menu-item active">
+          Profil
+        </button>
+        <button class="menu-item" (click)="showActivity = !showActivity">
+          Activitate
+        </button>
+      </div>
+    </div>
+
+    <div class="profile-content">
+      <div class="section">
+        <div class="section-header">
+          <h2>Informații Personale</h2>
+          <button class="btn btn-secondary" (click)="toggleEditProfile()">
+            {{ editingProfile ? 'Anulare' : 'Editare' }}
+          </button>
+        </div>
+
+        <div *ngIf="!editingProfile" class="info-grid">
+          <div class="info-item">
+            <label>Prenume</label>
+            <p>{{ user?.firstName }}</p>
+          </div>
+          <div class="info-item">
+            <label>Nume</label>
+            <p>{{ user?.lastName }}</p>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <p>{{ user?.email }}</p>
+          </div>
+          <div class="info-item">
+            <label>Telefon</label>
+            <p>{{ user?.phoneNumber || 'Nu a fost adăugat' }}</p>
+          </div>
+        </div>
+
+        <form *ngIf="editingProfile" [formGroup]="profileForm" class="form">
+          <div class="form-group">
+            <label>Prenume</label>
+            <input type="text" formControlName="firstName" class="form-input"
+                   [class.error]="firstName?.invalid && firstName?.touched">
+            <span class="error-text" *ngIf="firstName?.invalid && firstName?.touched">
+              Prenumele este obligatoriu (min 2 caractere)
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Nume</label>
+            <input type="text" formControlName="lastName" class="form-input"
+                   [class.error]="lastName?.invalid && lastName?.touched">
+            <span class="error-text" *ngIf="lastName?.invalid && lastName?.touched">
+              Numele este obligatoriu (min 2 caractere)
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" formControlName="email" class="form-input" [disabled]="true">
+          </div>
+
+          <div class="form-group">
+            <label>Telefon</label>
+            <input type="tel" formControlName="phoneNumber" class="form-input"
+                   placeholder="Opțional">
+          </div>
+
+          <div *ngIf="profileError" class="alert alert-error">
+            {{ profileError }}
+          </div>
+          <div *ngIf="profileSuccess" class="alert alert-success">
+            {{ profileSuccess }}
+          </div>
+
+          <button type="button" class="btn btn-primary" 
+                  (click)="saveProfile()"
+                  [disabled]="profileForm.invalid || savingProfile">
+            <span *ngIf="!savingProfile">Salvează Modificări</span>
+            <span *ngIf="savingProfile">
+              <span class="spinner-small"></span> Se salvează...
+            </span>
+          </button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Securitate</h2>
+
+        <div class="security-item">
+          <div class="security-header">
+            <div>
+              <h3>Schimbă Parola</h3>
+              <p>Update-ează parola-ți pentru a-ți securiza contul</p>
+            </div>
+            <button class="btn btn-secondary" (click)="toggleChangePassword()">
+              {{ changingPassword ? 'Anulare' : 'Schimbă Parola' }}
+            </button>
+          </div>
+
+          <form *ngIf="changingPassword" [formGroup]="passwordForm" class="form">
+            <div class="form-group">
+              <label>Parola Actuală</label>
+              <input type="password" formControlName="currentPassword" class="form-input"
+                     [class.error]="currentPassword?.invalid && currentPassword?.touched">
+              <span class="error-text" *ngIf="currentPassword?.invalid && currentPassword?.touched">
+                Parolă obligatorie
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label>Parola Nouă</label>
+              <input type="password" formControlName="newPassword" class="form-input"
+                     [class.error]="newPassword?.invalid && newPassword?.touched">
+              <span class="error-text" *ngIf="newPassword?.invalid && newPassword?.touched">
+                Min 8 caractere
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label>Confirmă Parola Nouă</label>
+              <input type="password" formControlName="confirmPassword" class="form-input"
+                     [class.error]="confirmPassword?.invalid && confirmPassword?.touched">
+              <span class="error-text" *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
+                Parolele nu se potrivesc
+              </span>
+            </div>
+
+            <div *ngIf="passwordError" class="alert alert-error">
+              {{ passwordError }}
+            </div>
+            <div *ngIf="passwordSuccess" class="alert alert-success">
+              {{ passwordSuccess }}
+            </div>
+
+            <button type="button" class="btn btn-primary" 
+                    (click)="changePassword()"
+                    [disabled]="passwordForm.invalid || savingProfile">
+              <span *ngIf="!savingProfile">Schimbă Parola</span>
+              <span *ngIf="savingProfile">
+                <span class="spinner-small"></span> Se procesează...
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <div class="security-item">
+          <div class="security-header">
+            <div>
+              <h3>Autentificare în Doi Pași (2FA)</h3>
+              <p>Activează autentificarea în doi pași pentru o securitate mai mare</p>
+            </div>
+            <div class="status-badge" [class.enabled]="twoFaEnabled">
+              {{ twoFaEnabled ? 'Activ' : 'Inactiv' }}
+            </div>
+          </div>
+
+          <div class="twofa-controls">
+            <p class="description">
+              Autentificarea în doi pași adaugă un nivel suplimentar de securitate
+              cerând un cod din aplicația de autentificare pe lângă parola.
+            </p>
+
+            <div *ngIf="twoFaEnabled" class="twofa-info">
+              <div class="info-box">
+                <p><strong>Status:</strong> Activ</p>
+                <p><strong>Metodă:</strong> Google Authenticator / Authy / Microsoft Authenticator</p>
+                <p *ngIf="user?.twoFaVerified"><strong>2FA verificat:</strong> Da</p>
+              </div>
+
+              <div class="twofa-actions">
+                <button class="btn btn-secondary" (click)="showDisableTwoFa = !showDisableTwoFa">
+                  Dezactivează 2FA
+                </button>
+
+                <div *ngIf="showDisableTwoFa" class="confirmation-box">
+                  <p class="warning">
+                    Ești sigur? Dezactivarea 2FA va reduce securitatea contului tău.
+                  </p>
+                  <div class="button-group">
+                    <button class="btn btn-danger" (click)="disableTwoFa()" [disabled]="twoFaLoading">
+                      {{ twoFaLoading ? 'Se procesează...' : 'Da, Dezactivează' }}
+                    </button>
+                    <button class="btn btn-secondary" (click)="showDisableTwoFa = false">
+                      Anulare
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!twoFaEnabled" class="twofa-actions">
+              <button class="btn btn-primary" (click)="enableTwoFa()" [disabled]="twoFaLoading">
+                <span *ngIf="!twoFaLoading">Activează 2FA</span>
+                <span *ngIf="twoFaLoading">
+                  <span class="spinner-small"></span> Se procesează...
+                </span>
+              </button>
+            </div>
+
+            <div *ngIf="twoFaError" class="alert alert-error">
+              {{ twoFaError }}
+            </div>
+            <div *ngIf="twoFaSuccess" class="alert alert-success">
+              {{ twoFaSuccess }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Informații Cont</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>ID Utilizator</label>
+            <p class="monospace">{{ user?.userId }}</p>
+          </div>
+          <div class="info-item">
+            <label>Rol</label>
+            <p>{{ (user?.role === 'ADMIN_RESTAURANT' || user?.role === 'SYSTEM_ADMIN') ? 'Administrator' : 'Utilizator' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Restaurant ID</label>
+            <p class="monospace">{{ user?.restaurantId || 'N/A' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

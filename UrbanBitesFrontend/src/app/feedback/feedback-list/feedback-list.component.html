@@ -1,0 +1,32 @@
+<div class="feedback-list-container">
+  <h3 class="section-title">Experiențele Clienților</h3>
+
+  <div *ngIf="loading" class="loader">Se încarcă recenziile...</div>
+
+  <div *ngIf="!loading && feedbacks.length === 0" class="empty-feedback">
+    <p>Acest restaurant nu are încă recenzii. Fii primul care lasă un feedback după vizită!</p>
+  </div>
+
+  <div class="feedback-grid" *ngIf="!loading && feedbacks.length > 0">
+    <div class="feedback-item" *ngFor="let f of feedbacks">
+      <div class="feedback-header">
+        <div class="user-meta">
+          <span class="user-avatar">👤</span>
+          <strong>Utilizator #{{ f.userId }}</strong>
+        </div>
+        <div class="rating-stars">
+          <span class="star filled" *ngFor="let s of getStars(f.rating)">★</span>
+          <span class="star empty" *ngFor="let s of [1,2,3,4,5] | slice:f.rating">★</span>
+        </div>
+      </div>
+      
+      <div class="feedback-body">
+        <p class="comment">"{{ f.comment }}"</p>
+      </div>
+      
+      <div class="feedback-footer">
+        <span class="date">{{ f.createdAt | date:'dd MMM yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+</div>

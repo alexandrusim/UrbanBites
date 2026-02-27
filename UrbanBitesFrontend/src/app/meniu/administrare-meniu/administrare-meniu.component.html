@@ -1,0 +1,80 @@
+<div class="container mt-4">
+
+  <h1 class="mb-4">{{ titluPagina }}</h1>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <form [formGroup]="preparatForm" (ngSubmit)="onSubmit()">
+
+        <div class="mb-3">
+          <label for="nume" class="form-label">Nume Preparat</label>
+          <input id="nume" type="text" class="form-control" formControlName="nume" 
+                 [ngClass]="{'is-invalid': preparatForm.get('nume')?.invalid && preparatForm.get('nume')?.touched}">
+          <div *ngIf="preparatForm.get('nume')?.invalid && preparatForm.get('nume')?.touched" class="invalid-feedback">
+            Numele este obligatoriu.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="descriere" class="form-label">Descriere</label>
+          <textarea id="descriere" class="form-control" formControlName="descriere" rows="3"
+                    [ngClass]="{'is-invalid': preparatForm.get('descriere')?.invalid && preparatForm.get('descriere')?.touched}"></textarea>
+          <div *ngIf="preparatForm.get('descriere')?.invalid && preparatForm.get('descriere')?.touched" class="invalid-feedback">
+            Descrierea este obligatorie.
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="pret" class="form-label">Pret (RON)</label>
+            <input id="pret" type="number" class="form-control" formControlName="pret" step="0.01" 
+                   [ngClass]="{'is-invalid': preparatForm.get('pret')?.invalid && preparatForm.get('pret')?.touched}">
+            <div *ngIf="preparatForm.get('pret')?.hasError('required') && preparatForm.get('pret')?.touched" class="invalid-feedback">
+              Pretul este obligatoriu.
+            </div>
+            <div *ngIf="preparatForm.get('pret')?.hasError('min')" class="invalid-feedback">
+              Pretul trebuie sa fie mai mare decat 0.
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="categorie" class="form-label">Categorie</label>
+            <input id="categorie" type="text" class="form-control" formControlName="categorie" 
+                   [ngClass]="{'is-invalid': preparatForm.get('categorie')?.invalid && preparatForm.get('categorie')?.touched}">
+            <div *ngIf="preparatForm.get('categorie')?.invalid && preparatForm.get('categorie')?.touched" class="invalid-feedback">
+              Categoria este obligatorie.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="imagine_url" class="form-label">URL Imagine</label>
+          <input id="imagine_url" type="url" class="form-control" formControlName="imagine_url">
+        </div>
+
+        <div class="mb-4 p-3 border rounded">
+          <label class="form-label d-block mb-2">Alergeni (lista)</label>
+          
+          <div formArrayName="alergeni">
+            <div *ngFor="let control of alergeni.controls; let i = index" class="input-group mb-2">
+              <input [formControlName]="i" type="text" class="form-control" placeholder="Ex: Gluten, Lactoza">
+              <button type="button" class="btn btn-outline-danger" (click)="eliminaAlergen(i)">Elimina</button>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-sm btn-outline-primary mt-2" (click)="adaugaAlergen()">+ Adauga Alergen</button>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary me-2" (click)="navigheazaLaLista()">Anuleaza / inapoi la Lista</button>
+          <button type="submit" class="btn btn-success" [disabled]="preparatForm.invalid">
+            <span *ngIf="esteEditare">Salveaza Modificarile</span>
+            <span *ngIf="!esteEditare">Adauga Preparatul</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

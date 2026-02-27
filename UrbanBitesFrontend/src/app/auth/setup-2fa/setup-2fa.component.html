@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="setup-card">
+    <div class="header">
+      <h1>Enable Two-Factor Authentication</h1>
+      <p class="subtitle">Secure your account with Google Authenticator</p>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Generating setup code...</p>
+    </div>
+
+    <div *ngIf="!loading && step === 'setup'" class="step-content">
+      <div class="step-header">
+        <span class="step-number">Step 1 of 2</span>
+        <h2>Scan QR Code</h2>
+      </div>
+
+      <div class="qr-container" *ngIf="qrCode">
+        <img [src]="qrCode" alt="QR Code for 2FA" class="qr-code">
+        <p class="qr-instruction">
+          Open <strong>Google Authenticator</strong> on your phone<br>
+          Tap <strong>[+]</strong> → <strong>Scan QR Code</strong><br>
+          Point camera at this QR code
+        </p>
+      </div>
+
+      <div class="manual-entry">
+        <details>
+          <summary>Can't scan? Enter manually</summary>
+          <div class="secret-key">
+            <label>Secret Key:</label>
+            <code class="secret-code">{{ secret }}</code>
+            <button 
+              type="button"
+              class="copy-btn"
+              (click)="copyToClipboard(secret)">
+              Copy
+            </button>
+          </div>
+        </details>
+      </div>
+
+      <div class="verification-section">
+        <h3>Enter 6-digit code from Authenticator</h3>
+        <div class="code-input-wrapper">
+          <input 
+            type="text"
+            class="code-input"
+            [(ngModel)]="verificationCode"
+            maxlength="6"
+            inputmode="numeric"
+            placeholder="000000"
+            [disabled]="verifying">
+          <span class="input-hint">6 digits</span>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <div class="button-group">
+        <button 
+          type="button"
+          class="btn btn-primary"
+          (click)="verifyCode()"
+          [disabled]="verifying || verificationCode.length !== 6">
+          <span *ngIf="!verifying">Verify & Enable 2FA</span>
+          <span *ngIf="verifying">Verifying...</span>
+        </button>
+        <button 
+          type="button"
+          class="btn btn-secondary"
+          (click)="restartSetup()"
+          [disabled]="verifying">
+          Generate New QR
+        </button>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Why 2FA?</strong></p>
+        <ul>
+          <li>6-digit codes change every 30 seconds</li>
+          <li>Codes work offline - no internet needed</li>
+          <li>Impossible to guess or phish</li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="step === 'verify' && success" class="success-state">
+      <h2>{{ success }}</h2>
+      <p>2FA is now enabled on your account</p>
+      <p class="redirect-info">Redirecting to settings in 2 seconds...</p>
+    </div>
+  </div>
+</div>

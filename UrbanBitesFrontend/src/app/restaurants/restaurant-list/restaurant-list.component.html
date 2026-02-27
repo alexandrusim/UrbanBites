@@ -1,0 +1,63 @@
+<div class="restaurant-list-container">
+  <h1>Restaurante Disponibile</h1>
+
+  <div class="filters-section">
+    <h3>Filtrează</h3>
+    <div class="filters">
+      <div class="filter-group">
+        <label for="city">Oraș:</label>
+        <select id="city" [(ngModel)]="selectedCity" (change)="onCityChange()">
+          <option value="">Toate orașele</option>
+          <option *ngFor="let city of cities" [value]="city">{{ city }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="cuisine">Tip bucătărie:</label>
+        <select id="cuisine" [(ngModel)]="selectedCuisine" (change)="onCuisineChange()">
+          <option value="">Toate tipurile</option>
+          <option *ngFor="let cuisine of cuisineTypes" [value]="cuisine">{{ cuisine }}</option>
+        </select>
+      </div>
+
+      <button class="btn-clear" (click)="clearFilters()">Șterge Filtre</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Se încarcă restaurantele...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="loadRestaurants()">Reîncearcă</button>
+  </div>
+
+  <div *ngIf="!loading && !error" class="restaurants-grid">
+    <div *ngFor="let restaurant of filteredRestaurants" class="restaurant-card">
+      <div class="restaurant-image">
+        <img [src]="restaurant.coverImageUrl || 'assets/default-restaurant.jpg'" [alt]="restaurant.name">
+      </div>
+      
+      <div class="restaurant-info">
+        <h3>{{ restaurant.name }}</h3>
+        <p class="location">{{ restaurant.city }}, {{ restaurant.address }}</p>
+
+        <p class="cuisine" *ngIf="restaurant.cuisineType">{{ restaurant.cuisineType }}</p>
+
+        <div class="restaurant-meta">
+          <span class="rating" *ngIf="restaurant.averageRating">
+            ⭐ {{ restaurant.averageRating | number:'1.1-1' }}
+          </span>
+          <span class="price-range" *ngIf="restaurant.priceRange">{{ restaurant.priceRange }}</span>
+        </div>
+
+        <div class="restaurant-actions">
+          <button class="btn-details" [routerLink]="['/restaurants', restaurant.restaurantId]">Detalii</button>
+          <button class="btn-menu" [routerLink]="['/restaurants', restaurant.restaurantId, 'meniu']" style="background-color: #ff9800; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin: 0 5px;">Meniu</button>
+          <button class="btn-reserve" (click)="makeReservation(restaurant.restaurantId)">Rezervă masă</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

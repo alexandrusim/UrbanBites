@@ -1,0 +1,46 @@
+.feedback-list-container {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.feedback-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feedback-item {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.feedback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
+.star.empty {
+    color: #e4e5e9;
+}
+
+.comment {
+    font-style: italic;
+    color: #444;
+    line-height: 1.6;
+}
+
+.feedback-footer {
+    margin-top: 1rem;
+    text-align: right;
+    font-size: 0.85rem;
+    color: #888;
+}

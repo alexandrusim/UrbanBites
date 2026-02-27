@@ -1,0 +1,245 @@
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  font-size: 3rem;
+  opacity: 0.8;
+}
+
+.stat-content h3 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.stat-content p {
+  margin: 0.5rem 0 0 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.stat-card.pending {
+  border-left: 4px solid #ffc107;
+}
+
+.stat-card.confirmed {
+  border-left: 4px solid #28a745;
+}
+
+.stat-card.today {
+  border-left: 4px solid #007bff;
+}
+
+.admin-actions {
+  margin-top: 3rem;
+}
+
+.admin-actions h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.activity-section {
+  margin-top: 2.5rem;
+}
+
+.activity-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.logs-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.logs-table th, .logs-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.logs-table thead th {
+  background: #f7f9fc;
+  font-weight: 700;
+}
+
+.logs-table .endpoint {
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logs-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.paste-area textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+.paste-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.activity-section {
+  background: linear-gradient(180deg, rgba(118,75,162,0.04), rgba(102,126,234,0.02));
+  padding: 1.25rem;
+  border-radius: 12px;
+}
+
+.logs-controls .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 6px 18px rgba(102,126,234,0.15);
+}
+
+.paste-area {
+  margin: 1rem 0 1.25rem 0;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.paste-area textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #222;
+}
+
+.logs-table table thead th {
+  background: linear-gradient(135deg, #f5f8ff 0%, #eef3ff 100%);
+}
+
+.logs-table tbody tr {
+  transition: background 0.12s;
+}
+
+.logs-table tbody tr:hover {
+  background: #fbfdff;
+}
+
+.no-data p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .logs-table thead { display: none; }
+  .logs-table tbody tr { display: block; margin: 0 0 1rem; padding: 1rem; border-radius: 8px; background: #fff; }
+  .logs-table td { display: flex; justify-content: space-between; padding: 0.25rem 0; border: none; }
+}
+
+.action-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: block;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+.action-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.action-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.action-card p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+}

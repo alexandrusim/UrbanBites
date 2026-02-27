@@ -1,0 +1,51 @@
+<div class="menu-container">
+  <h2 class="menu-title">Meniul Restaurantului</h2>
+
+  <div class="filter-bar" *ngIf="!loading && allMenuItems.length > 0">
+    <button 
+      *ngFor="let cat of categories" 
+      [class.active]="selectedCategory === cat"
+      (click)="filterByCategory(cat)">
+      {{ cat }}
+    </button>
+    <button *ngIf="(authService.isRestaurantAdmin() || authService.isSystemAdmin())" class="btn-edit-menu" (click)="router.navigate(['/admin/menu'], { queryParams: { restaurantId: restaurantId } })">
+      Administrare Meniu
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Se pregătesc preparatele...</p>
+  </div>
+
+  <div class="menu-grid" *ngIf="!loading && filteredItems.length > 0">
+    <div class="menu-card" *ngFor="let item of filteredItems">
+      <img *ngIf="item.imageUrl" [src]="item.imageUrl" alt="{{ item.name }}" class="menu-item-image">
+      <div class="card-content">
+        <div class="card-header">
+          <h3>{{ item.name }}</h3>
+          <span class="category-tag">{{ item.category }}</span>
+        </div>
+
+        <p class="description">{{ item.description }}</p>
+
+        <div class="dietary-info" *ngIf="item.isVegetarian || item.isVegan || item.isGlutenFree">
+          <span *ngIf="item.isVegetarian" class="badge badge-vegetarian">Vegetarian</span>
+          <span *ngIf="item.isVegan" class="badge badge-vegan">Vegan</span>
+          <span *ngIf="item.isGlutenFree" class="badge badge-gluten-free">Fără gluten</span>
+        </div>
+
+        <div class="card-footer">
+          <span class="price">{{ item.price }} RON</span>
+          <button class="add-btn">Adaugă în coș</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && filteredItems.length === 0" class="empty-state">
+    <p *ngIf="restaurantId">Acest restaurant nu are încă preparate adăugate în meniu.</p>
+    <p *ngIf="!restaurantId">Eroare: Nu am putut identifica restaurantul.</p>
+    <button (click)="loadMenu(restaurantId!)" *ngIf="restaurantId" class="btn-retry">Reîncearcă</button>
+  </div>
+</div>

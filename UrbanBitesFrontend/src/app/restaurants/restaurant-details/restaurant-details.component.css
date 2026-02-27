@@ -1,0 +1,307 @@
+.restaurant-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.restaurant-header {
+  margin-bottom: 2rem;
+}
+
+.btn-back {
+  padding: 0.5rem 1rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.btn-back:hover {
+  background: #5a6268;
+}
+
+.header-image {
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.header-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-info h1 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+.header-meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.header-meta span {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.rating {
+  color: #f39c12 !important;
+  font-weight: 500;
+}
+
+.btn-reserve-main {
+  padding: 1rem 2rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.btn-reserve-main:hover {
+  background: #218838;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 2rem;
+}
+
+.tab {
+  padding: 1rem 2rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: #333;
+  background: #f8f9fa;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: 600;
+}
+
+.tab-content {
+  min-height: 400px;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.info-card h3 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.info-card p {
+  margin: 0.5rem 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+.info-card a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.info-card a:hover {
+  text-decoration: underline;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features-list li {
+  padding: 0.5rem 0;
+  color: #666;
+}
+
+.menu-section, .reviews-section {
+  padding: 1rem 0;
+}
+
+.no-content {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.review-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.star {
+  color: #f39c12;
+  font-size: 1.2rem;
+}
+
+.rating-number {
+  color: #666;
+  font-weight: 500;
+}
+
+.review-date {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.review-ratings {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.review-ratings span {
+  background: #e9ecef;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.review-comment {
+  color: #333;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+.admin-response {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  border-left: 3px solid #007bff;
+}
+
+.admin-response strong {
+  color: #007bff;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.admin-response p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.response-date {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 3rem;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.btn-retry {
+  margin-top: 1rem;
+  padding: 0.5rem 1.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .restaurant-details-container {
+    padding: 1rem;
+  }
+
+  .header-info h1 {
+    font-size: 1.8rem;
+  }
+
+  .header-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}

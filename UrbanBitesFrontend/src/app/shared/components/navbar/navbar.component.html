@@ -1,0 +1,62 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <a routerLink="/" class="navbar-brand">UrbanBites</a>
+
+    <button class="navbar-toggle" (click)="toggleMenu()" [class.active]="isMenuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="navbar-menu" [class.active]="isMenuOpen">
+      <a routerLink="/restaurants" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Restaurante</a>
+
+      <ng-container *ngIf="isLoggedIn; else guestLinks">
+        <a routerLink="/rezervari/lista" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+          Rezervările mele
+        </a>
+        
+        <a routerLink="/notifications" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+          Notificări
+        </a>
+        
+        <a routerLink="/feedback" routerLinkActive="active" class="nav-link" (click)="closeMenu()">
+          FeedBack
+        </a>
+
+        <a routerLink="/rezervari/noua" routerLinkActive="active" class="nav-link btn-reserve" (click)="closeMenu()">
+          Rezervă acum
+        </a>
+
+        <ng-container *ngIf="authService.isAdmin()">
+          <div class="admin-dropdown" [class.active]="isAdminMenuOpen">
+            <button class="admin-toggle" (click)="toggleAdminMenu()">Admin <span class="arrow" [class.rotate]="isAdminMenuOpen">▼</span></button>
+            <div class="admin-menu" [class.show]="isAdminMenuOpen">
+              <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Dashboard</a>
+              <a *ngIf="authService.isSystemAdmin()" routerLink="/admin/users" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Utilizatori</a>
+              <a *ngIf="authService.isSystemAdmin()" routerLink="/admin/restaurants" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Restaurante</a>
+              <a routerLink="/admin/reservations" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Rezervări</a>
+              <a routerLink="/admin/payments" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Plăți</a>
+              <a *ngIf="authService.isRestaurantAdmin()" routerLink="/admin/pending-reservations" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Rezervări Pending</a>
+              <a *ngIf="authService.isRestaurantAdmin()" routerLink="/admin/tables" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Mese</a>
+              <a *ngIf="authService.isRestaurantAdmin()" routerLink="/admin/menu" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Meniu</a>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="user-dropdown" [class.active]="isUserMenuOpen">
+          <button class="user-toggle" (click)="toggleUserMenu()">{{ currentUser?.firstName }} <span class="arrow" [class.rotate]="isUserMenuOpen">▼</span></button>
+          <div class="user-menu" [class.show]="isUserMenuOpen">
+            <a routerLink="/profile" routerLinkActive="active" class="user-link" (click)="closeMenu()">Profil & Setări</a>
+            <button (click)="logout()" class="user-link logout-link">Deconectare</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #guestLinks>
+        <a routerLink="/guest-reservation" routerLinkActive="active" class="nav-link btn-reserve" (click)="closeMenu()">Rezervă o masă</a>
+        <a routerLink="/reservation-status" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Verifică rezervare</a>
+        <a *ngIf="!authService.isLoggedIn" routerLink="/login" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Autentificare</a>
+        <a *ngIf="authService.isLoggedIn" routerLink="/profile" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Contul Meu</a>
+      </ng-template>
+    </div> </div> </nav>

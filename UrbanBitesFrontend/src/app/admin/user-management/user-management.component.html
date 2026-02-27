@@ -1,0 +1,59 @@
+<div class="user-management-container">
+  <h1>Gestionare Utilizatori</h1>
+
+  <div *ngIf="loading" class="loading">
+    Se încarcă utilizatorii...
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="users-table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nume</th>
+          <th>Email</th>
+          <th>Telefon</th>
+          <th>Rol</th>
+          <th>Status</th>
+          <th>Data Înregistrării</th>
+          <th>Acțiuni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.userId }}</td>
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phoneNumber || '-' }}</td>
+          <td>
+            <span [class]="'badge ' + getRoleBadgeClass(user.role)">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <span [class]="'badge ' + getStatusBadgeClass(user.isActive || false)">
+              {{ user.isActive ? 'Activ' : 'Inactiv' }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <button 
+              class="btn-delete" 
+              (click)="deleteUser(user.userId, user.firstName + ' ' + user.lastName)"
+              [disabled]="user.role === 'SYSTEM_ADMIN'">
+              Șterge
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="users.length === 0" class="no-data">
+      Nu există utilizatori înregistrați.
+    </div>
+  </div>
+</div>
